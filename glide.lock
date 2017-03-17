@@ -1,12 +1,14 @@
-hash: c892397377aceae1696a58c8226af20cf368b5bfe3671deba01fe5565b73be8a
-updated: 2017-03-17T17:09:13.394454976+01:00
+hash: 36bc0ca35735b9f05894edd08d04a89615a24ee362cc75335012a9e3ccc54de6
+updated: 2017-03-17T20:59:15.608650899+01:00
 imports:
 - name: github.com/binhq/apis
-  version: ccec74d9f95b3054d12329792f71b8c38b1a3e47
+  version: 969a8f54a2afa5030b53f4f6377233f5a22d1887
 - name: github.com/golang/protobuf
   version: 69b215d01a5606c843240eab4937eab3acee6530
   subpackages:
   - proto
+- name: github.com/hashicorp/go-version
+  version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/spf13/cobra
