@@ -14,6 +14,26 @@ before_install:
 
 install: make setup
 
-script: make check
+before_script:
+    - export PACKAGE=$(go list .)
+    - export VERSION=${TRAVIS_TAG:-$TRAVIS_BRANCH}
+    - export COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null)
+    - export BUILD_DATE=$(date +%FT%T%z)
 
-after_success: if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then curl -sL https://git.io/goreleaser | bash; fi
+script:
+    - make check
+    - make build
+
+after_success: >
+    if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then
+        # This is a hack (https://github.com/goreleaser/goreleaser/issues/141)
+        sed -i "s|PACKAGE|$PACKAGE|g" goreleaser.yml
+        sed -i "s/VERSION/$VERSION/g" goreleaser.yml
+        sed -i "s/COMMIT_HASH/$COMMIT_HASH/g" goreleaser.yml
+        sed -i "s/BUILD_DATE/$BUILD_DATE/g" goreleaser.yml
+        git add goreleaser.yml
+        git commit -m 'This is a hack (https://github.com/goreleaser/goreleaser/issues/141)'
+
+        build/githubin get goreleaser/goreleaser 0.8.3 -o $HOME/bin
+        goreleaser
+    fi

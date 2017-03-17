@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var cfgFile string
+var version bool
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -19,6 +19,14 @@ var RootCmd = &cobra.Command{
 From the consumer point of view it's not that easy though:
 everyone packages software differently.
 This is where GithuBin helps: it unifies the way you download binaries`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if version {
+			fmt.Printf("GithuBin version %s, build %s (at %s)\n", Version, CommitHash, BuildDate)
+			return
+		}
+
+		cmd.Help()
+	},
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -28,4 +36,8 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
+}
+
+func init() {
+	RootCmd.Flags().BoolVarP(&version, "version", "v", false, "Print version information and quit")
 }

@@ -4,6 +4,7 @@ build:
         - linux
     goarch:
         - amd64
+    ldflags: "-s -w -X PACKAGE/cmd.Version=VERSION -X PACKAGE/cmd.CommitHash=COMMIT_HASH -X PACKAGE/cmd.BuildDate=BUILD_DATE"
 
 archive:
     replacements:
