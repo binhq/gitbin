@@ -1,0 +1,16 @@
+hash: c892397377aceae1696a58c8226af20cf368b5bfe3671deba01fe5565b73be8a
+updated: 2017-03-17T17:09:13.394454976+01:00
+imports:
+- name: github.com/binhq/apis
+  version: ccec74d9f95b3054d12329792f71b8c38b1a3e47
+- name: github.com/golang/protobuf
+  version: 69b215d01a5606c843240eab4937eab3acee6530
+  subpackages:
+  - proto
+- name: github.com/inconshreveable/mousetrap
+  version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
+- name: github.com/spf13/cobra
+  version: 16c014f1a19d865b765b420e74508f80eb831ada
+- name: github.com/spf13/pflag
+  version: 25f8b5b07aece3207895bf19f7ab517eb3b22a40
+testImports: []
