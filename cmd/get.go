@@ -95,6 +95,7 @@ var getCmd = &cobra.Command{
 			defer gz.Close()
 
 			tr := tar.NewReader(gz)
+			var found bool
 
 			for {
 				header, err := tr.Next()
@@ -105,6 +106,7 @@ var getCmd = &cobra.Command{
 				}
 
 				if header.Name == download.Path {
+					found = true
 					_, err := io.Copy(file, tr)
 					if err != nil {
 						panic(err)
@@ -112,6 +114,10 @@ var getCmd = &cobra.Command{
 
 					break
 				}
+			}
+
+			if !found {
+				panic("Binary not found")
 			}
 		}
 

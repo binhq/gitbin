@@ -19,4 +19,11 @@ var repositories = map[string]map[string]Rule{
 			PathTemplate: "./migrate.{{.Os}}-{{.Arch}}", // TODO: do not require ./ at the beggining of the path???
 		},
 	},
+	"goreleaser/goreleaser": map[string]Rule{
+		"*": Rule{
+			UrlTemplate:  "https://github.com/{{.Owner}}/{{.Repository}}/releases/download/v{{.Version}}/goreleaser_{{title .Os}}_{{archReplace .Arch}}.tar.gz",
+			Format:       githubin.BinaryDownload_TARGZ,
+			PathTemplate: "goreleaser", // TODO: do not require ./ at the beggining of the path???
+		},
+	},
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"strings"
 
 	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
 	version "github.com/hashicorp/go-version"
@@ -59,14 +60,29 @@ func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error)
 		return nil, errors.New("Rule not found for repository")
 	}
 
-	urlTmpl, err := template.New("url").Parse(currentRule.UrlTemplate)
-	if err != nil {
-		return nil, errors.New("Cannot parse URL template")
+	tplFuncs := template.FuncMap{
+		"title": strings.Title,
+		"archReplace": func(s string) string {
+			switch s {
+			case "386":
+				return "i386"
+
+			case "amd64":
+				return "x86_64"
+			}
+
+			return s
+		},
 	}
 
-	pathTmpl, err := template.New("path").Parse(currentRule.PathTemplate)
+	urlTmpl, err := template.New("url").Funcs(tplFuncs).Parse(currentRule.UrlTemplate)
 	if err != nil {
-		return nil, errors.New("Cannot parse Path template")
+		return nil, fmt.Errorf("Cannot parse URL template: %v", err)
+	}
+
+	pathTmpl, err := template.New("path").Funcs(tplFuncs).Parse(currentRule.PathTemplate)
+	if err != nil {
+		return nil, fmt.Errorf("Cannot parse Path template: %v", err)
 	}
 
 	urlBuf := &bytes.Buffer{}
