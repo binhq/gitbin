@@ -15,3 +15,5 @@ before_install:
 install: make setup
 
 script: make check
+
+after_success: if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then curl -sL https://git.io/goreleaser | bash; fi
