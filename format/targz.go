@@ -7,39 +7,51 @@ import (
 
 	"errors"
 
-	"bytes"
-
 	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
 )
 
-// TargzUnpacker unpacks from a tar.gz archive
-func TargzUnpacker(r io.Reader, download *githubin.BinaryDownload) (io.Reader, error) {
+type targzBinaryReader struct {
+	gzipReader io.ReadCloser
+	tarReader  *tar.Reader
+}
+
+func newTargzBinaryReader(r io.Reader, path string) (io.ReadCloser, error) {
 	gz, err := gzip.NewReader(r)
 	if err != nil {
 		return nil, err
 	}
-	defer gz.Close()
 
 	tr := tar.NewReader(gz)
 
 	for {
 		header, err := tr.Next()
 		if err == io.EOF {
-			break
+			return nil, errors.New("Binary not found in archive")
 		} else if err != nil {
 			return nil, err
 		}
 
-		if header.Name == download.Path {
-			buf := new(bytes.Buffer)
-			_, err := io.Copy(buf, tr)
-			if err != nil {
-				return nil, err
-			}
-
-			return buf, nil
+		if header.Name == path {
+			break
 		}
 	}
 
-	return nil, errors.New("Binary not found in archive")
+	return &targzBinaryReader{
+		gzipReader: gz,
+		tarReader:  tr,
+	}, nil
+}
+
+func (r *targzBinaryReader) Read(p []byte) (int, error) {
+	return r.tarReader.Read(p)
+}
+
+// Close implements io.ReadCloser
+func (r *targzBinaryReader) Close() error {
+	return r.gzipReader.Close()
+}
+
+// TargzUnpacker unpacks from a tar.gz archive
+func TargzUnpacker(r io.Reader, download *githubin.BinaryDownload) (io.Reader, error) {
+	return newTargzBinaryReader(r, download.Path)
 }

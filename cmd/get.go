@@ -80,6 +80,10 @@ var getCmd = &cobra.Command{
 			panic(err)
 		}
 
+		if r, ok := binary.(io.ReadCloser); ok {
+			defer r.Close()
+		}
+
 		// TODO: Create the directory if does not exists
 		if _, err := os.Stat(binaryOutput); os.IsNotExist(err) {
 			log.Fatal(err)
