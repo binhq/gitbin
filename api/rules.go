@@ -21,7 +21,7 @@ var repositories = map[string]map[string]Rule{
 	},
 	"goreleaser/goreleaser": map[string]Rule{
 		"*": Rule{
-			UrlTemplate:  "https://github.com/{{.Owner}}/{{.Repository}}/releases/download/v{{.Version}}/goreleaser_{{title .Os}}_{{archReplace .Arch}}.tar.gz",
+			UrlTemplate:  "https://github.com/{{.Owner}}/{{.Repository}}/releases/download/v{{.Version}}/goreleaser_{{.Os | title}}_{{.Arch | archReplace}}.tar.gz",
 			Format:       githubin.BinaryDownload_TARGZ,
 			PathTemplate: "goreleaser", // TODO: do not require ./ at the beggining of the path???
 		},

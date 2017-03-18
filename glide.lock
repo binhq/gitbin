@@ -1,6 +1,8 @@
-hash: 54c4ed447ff0ab1d7083e0e269505110d1173839ddb94b99903ee340b9fad5ad
-updated: 2017-03-18T13:38:08.620145511+01:00
+hash: f109039607464e5a254883468fec3735e1961bd44308d387f7106162d38f6536
+updated: 2017-03-18T13:42:49.947841153+01:00
 imports:
+- name: github.com/aokoli/goutils
+  version: 9c37978a95bd5c709a15883b6242714ea6709e64
 - name: github.com/binhq/apis
   version: 969a8f54a2afa5030b53f4f6377233f5a22d1887
 - name: github.com/golang/protobuf
@@ -11,8 +13,17 @@ imports:
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/Masterminds/semver
   version: 59c29afe1a994eacb71c833025ca7acf874bb1da
+- name: github.com/Masterminds/sprig
+  version: 23597e5f6ad0e4d590e71314bfd0251a4a3cf849
+- name: github.com/satori/go.uuid
+  version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/spf13/cobra
   version: 16c014f1a19d865b765b420e74508f80eb831ada
 - name: github.com/spf13/pflag
   version: 25f8b5b07aece3207895bf19f7ab517eb3b22a40
+- name: golang.org/x/crypto
+  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
+  subpackages:
+  - pbkdf2
+  - scrypt
 testImports: []

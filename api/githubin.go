@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"strings"
 
 	"github.com/Masterminds/semver"
+	"github.com/Masterminds/sprig"
 	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
 )
 
@@ -55,19 +55,18 @@ func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error)
 		return nil, errors.New("Rule not found for repository")
 	}
 
-	tplFuncs := template.FuncMap{
-		"title": strings.Title,
-		"archReplace": func(s string) string {
-			switch s {
-			case "386":
-				return "i386"
+	tplFuncs := sprig.FuncMap()
 
-			case "amd64":
-				return "x86_64"
-			}
+	tplFuncs["archReplace"] = func(s string) string {
+		switch s {
+		case "386":
+			return "i386"
 
-			return s
-		},
+		case "amd64":
+			return "x86_64"
+		}
+
+		return s
 	}
 
 	urlTmpl, err := template.New("url").Funcs(tplFuncs).Parse(currentRule.UrlTemplate)
