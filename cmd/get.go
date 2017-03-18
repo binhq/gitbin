@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"archive/tar"
-	"compress/gzip"
 	"errors"
 	"fmt"
 	"io"
@@ -14,8 +12,11 @@ import (
 
 	"github.com/binhq/githubin/api"
 	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
+	"github.com/binhq/githubin/format"
 	"github.com/spf13/cobra"
 )
+
+const fileFlags = os.O_CREATE | os.O_TRUNC | os.O_WRONLY
 
 var (
 	binaryOutput string
@@ -52,6 +53,11 @@ var getCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		unpacker, err := format.FindUnpacker(download.Format)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		fmt.Printf("Downloading %s\n", download.Url)
 
 		resp, err := http.Get(download.Url)
@@ -69,56 +75,25 @@ var getCmd = &cobra.Command{
 		}
 		defer resp.Body.Close()
 
+		binary, err := unpacker(resp.Body, download)
+		if err != nil {
+			panic(err)
+		}
+
 		// TODO: Create the directory if does not exists
 		if _, err := os.Stat(binaryOutput); os.IsNotExist(err) {
 			log.Fatal(err)
 		}
 
-		file, err := os.OpenFile(fmt.Sprintf("%s/%s", binaryOutput, search.Repository), os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.FileMode(binaryMode))
+		file, err := os.OpenFile(fmt.Sprintf("%s/%s", binaryOutput, search.Repository), fileFlags, os.FileMode(binaryMode))
 		if err != nil {
 			panic(err)
 		}
 		defer file.Close()
 
-		switch download.Format {
-		case githubin.BinaryDownload_BINARY:
-			_, err := io.Copy(file, resp.Body)
-			if err != nil {
-				panic(err)
-			}
-
-		case githubin.BinaryDownload_TARGZ:
-			gz, err := gzip.NewReader(resp.Body)
-			if err != nil {
-				panic(err)
-			}
-			defer gz.Close()
-
-			tr := tar.NewReader(gz)
-			var found bool
-
-			for {
-				header, err := tr.Next()
-				if err == io.EOF {
-					break
-				} else if err != nil {
-					panic(err)
-				}
-
-				if header.Name == download.Path {
-					found = true
-					_, err := io.Copy(file, tr)
-					if err != nil {
-						panic(err)
-					}
-
-					break
-				}
-			}
-
-			if !found {
-				panic("Binary not found")
-			}
+		_, err = io.Copy(file, binary)
+		if err != nil {
+			panic(err)
 		}
 
 		return nil
