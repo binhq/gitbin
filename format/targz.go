@@ -26,8 +26,12 @@ func newTargzBinaryReader(r io.Reader, path string) (io.ReadCloser, error) {
 	for {
 		header, err := tr.Next()
 		if err == io.EOF {
+			gz.Close()
+
 			return nil, errors.New("Binary not found in archive")
 		} else if err != nil {
+			gz.Close()
+
 			return nil, err
 		}
 
