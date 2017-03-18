@@ -2,4 +2,5 @@ package: github.com/binhq/githubin
 import:
 - package: github.com/spf13/cobra
 - package: github.com/binhq/apis
-- package: github.com/hashicorp/go-version
+- package: github.com/Masterminds/semver
+  version: ^1.2.2

@@ -7,8 +7,8 @@ import (
 	"html/template"
 	"strings"
 
+	"github.com/Masterminds/semver"
 	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
-	version "github.com/hashicorp/go-version"
 )
 
 // Rule is a template based on which a version of a project can be downloaded and extracted
@@ -32,7 +32,7 @@ func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error)
 		return nil, errors.New("Empty version")
 	}
 
-	v, err := version.NewVersion(search.Version)
+	v, err := semver.NewVersion(search.Version)
 	if err != nil {
 		return nil, errors.New("Version cannot be parsed")
 	}
@@ -40,19 +40,14 @@ func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error)
 	var currentRule *Rule
 
 	for constraint, rule := range rules {
-		if constraint == "*" {
+		c, err := semver.NewConstraint(constraint)
+		if err != nil {
+			continue
+		}
+
+		if c.Check(v) {
 			currentRule = &rule
 			break
-		} else {
-			c, err := version.NewConstraint(constraint)
-			if err != nil {
-				continue
-			}
-
-			if c.Check(v) {
-				currentRule = &rule
-				break
-			}
 		}
 	}
 

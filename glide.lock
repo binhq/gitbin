@@ -1,5 +1,5 @@
-hash: 36bc0ca35735b9f05894edd08d04a89615a24ee362cc75335012a9e3ccc54de6
-updated: 2017-03-17T20:59:15.608650899+01:00
+hash: 54c4ed447ff0ab1d7083e0e269505110d1173839ddb94b99903ee340b9fad5ad
+updated: 2017-03-18T13:38:08.620145511+01:00
 imports:
 - name: github.com/binhq/apis
   version: 969a8f54a2afa5030b53f4f6377233f5a22d1887
@@ -7,10 +7,10 @@ imports:
   version: 69b215d01a5606c843240eab4937eab3acee6530
   subpackages:
   - proto
-- name: github.com/hashicorp/go-version
-  version: 03c5bf6be031b6dd45afec16b1cf94fc8938bc77
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
+- name: github.com/Masterminds/semver
+  version: 59c29afe1a994eacb71c833025ca7acf874bb1da
 - name: github.com/spf13/cobra
   version: 16c014f1a19d865b765b420e74508f80eb831ada
 - name: github.com/spf13/pflag
