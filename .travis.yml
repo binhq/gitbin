@@ -9,7 +9,8 @@ go:
 
 before_install:
     - mkdir -p $HOME/bin
-    - curl -s https://raw.githubusercontent.com/sagikazarmark/traviscripts/e106b6d593915a0cb736919ecb3804e8eb5e0440/scripts/glide.sh | bash
+    - curl -sL http://get.binhq.io/githubin | DEST=$HOME/bin bash
+    - githubin get Masterminds/glide 0.12.3 -o $HOME/bin
     - make envcheck
 
 install: make setup
@@ -20,9 +21,7 @@ before_script:
     - export COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null)
     - export BUILD_DATE=$(date +%FT%T%z)
 
-script:
-    - make check
-    - make build
+script: make check
 
 after_success: >
     if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then
@@ -34,6 +33,6 @@ after_success: >
         git add goreleaser.yml
         git commit -m 'This is a hack (https://github.com/goreleaser/goreleaser/issues/141)'
 
-        build/githubin get goreleaser/goreleaser 0.8.3 -o $HOME/bin
+        githubin get goreleaser/goreleaser 0.8.3 -o $HOME/bin
         goreleaser
     fi
