@@ -1,4 +1,4 @@
-PROTO_PATH = vendor/github.com/binhq/apis/apis
+PROTO_PATH = vendor/github.com/binhq/apis/binhq
 
 .PHONY: proto
 

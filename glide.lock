@@ -1,10 +1,10 @@
 hash: f109039607464e5a254883468fec3735e1961bd44308d387f7106162d38f6536
-updated: 2017-03-18T13:42:49.947841153+01:00
+updated: 2017-03-22T00:37:30.33017125+01:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
 - name: github.com/binhq/apis
-  version: 969a8f54a2afa5030b53f4f6377233f5a22d1887
+  version: a9fb2cbe571bfd10c81b4a895928dd079710e93e
 - name: github.com/golang/protobuf
   version: 69b215d01a5606c843240eab4937eab3acee6530
   subpackages:
@@ -22,7 +22,7 @@ imports:
 - name: github.com/spf13/pflag
   version: 25f8b5b07aece3207895bf19f7ab517eb3b22a40
 - name: golang.org/x/crypto
-  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
+  version: 575fdbe86e5dd89229707ebec0575ce7d088a4a6
   subpackages:
   - pbkdf2
   - scrypt
