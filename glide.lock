@@ -1,10 +1,10 @@
-hash: f109039607464e5a254883468fec3735e1961bd44308d387f7106162d38f6536
-updated: 2017-03-22T00:37:30.33017125+01:00
+hash: ac5e2162464201e780d9e0bb256ff615f20b6a3eea9407ea1c1514e4fd2ce808
+updated: 2017-04-08T22:16:03.325906563+02:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
 - name: github.com/binhq/apis
-  version: a9fb2cbe571bfd10c81b4a895928dd079710e93e
+  version: 9f1c0723c98bbbbbff5c4f3cc1735d37986eeeaf
 - name: github.com/golang/protobuf
   version: 69b215d01a5606c843240eab4937eab3acee6530
   subpackages:
@@ -12,18 +12,44 @@ imports:
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/Masterminds/semver
-  version: 59c29afe1a994eacb71c833025ca7acf874bb1da
+  version: 3f0ab6d4ab4bed1c61caf056b63a6e62190c7801
 - name: github.com/Masterminds/sprig
   version: 23597e5f6ad0e4d590e71314bfd0251a4a3cf849
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
+- name: github.com/Sirupsen/logrus
+  version: ba1b36c82c5e05c4f912a88eab0dcd91a171688f
 - name: github.com/spf13/cobra
   version: 16c014f1a19d865b765b420e74508f80eb831ada
 - name: github.com/spf13/pflag
   version: 25f8b5b07aece3207895bf19f7ab517eb3b22a40
 - name: golang.org/x/crypto
-  version: 575fdbe86e5dd89229707ebec0575ce7d088a4a6
+  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
   subpackages:
   - pbkdf2
   - scrypt
+- name: golang.org/x/net
+  version: 61557ac0112b576429a0df080e1c2cef5dfbb642
+  subpackages:
+  - context
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
+- name: google.golang.org/grpc
+  version: 8050b9cbc271307e5a716a9d782803d09b0d6f2d
+  subpackages:
+  - codes
+  - credentials
+  - grpclog
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - stats
+  - tap
+  - transport
 testImports: []

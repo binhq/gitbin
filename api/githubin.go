@@ -2,14 +2,19 @@ package api
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"html/template"
 
 	"github.com/Masterminds/semver"
 	"github.com/Masterminds/sprig"
 	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
+	context "golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 )
+
+// Githubin implements the gRPC client mimicing the future API behaviour
+type Githubin struct{}
 
 // Rule is a template based on which a version of a project can be downloaded and extracted
 type Rule struct {
@@ -19,22 +24,22 @@ type Rule struct {
 }
 
 // FindBinary finds a binary in the local rule list
-func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error) {
+func (g *Githubin) FindBinary(ctx context.Context, search *githubin.BinarySearch, opts ...grpc.CallOption) (*githubin.BinaryDownload, error) {
 	repo := fmt.Sprintf("%s/%s", search.GetOwner(), search.GetRepository())
 
 	rules, ok := repositories[repo]
 	if !ok {
-		return nil, errors.New("Repository not found in the rule list")
+		return nil, grpc.Errorf(codes.NotFound, "repository not found in the rule list")
 	}
 
-	// TODO: fallback to latest if empty
+	// TODO: fallback to latest if empty?
 	if search.Version == "" {
-		return nil, errors.New("Empty version")
+		return nil, grpc.Errorf(codes.InvalidArgument, "empty version")
 	}
 
 	v, err := semver.NewVersion(search.Version)
 	if err != nil {
-		return nil, errors.New("Version cannot be parsed")
+		return nil, grpc.Errorf(codes.InvalidArgument, "version cannot be parsed")
 	}
 
 	var currentRule *Rule
@@ -52,11 +57,12 @@ func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error)
 	}
 
 	if currentRule == nil {
-		return nil, errors.New("Rule not found for repository")
+		return nil, grpc.Errorf(codes.NotFound, "rule not found for repository")
 	}
 
 	tplFuncs := sprig.FuncMap()
 
+	// TODO: replace this with more efficient code
 	tplFuncs["archReplace"] = func(s string) string {
 		switch s {
 		case "386":
@@ -71,22 +77,22 @@ func FindBinary(search *githubin.BinarySearch) (*githubin.BinaryDownload, error)
 
 	urlTmpl, err := template.New("url").Funcs(tplFuncs).Parse(currentRule.UrlTemplate)
 	if err != nil {
-		return nil, fmt.Errorf("Cannot parse URL template: %v", err)
+		return nil, grpc.Errorf(codes.Unknown, "cannot parse URL template: %v", err)
 	}
 
 	pathTmpl, err := template.New("path").Funcs(tplFuncs).Parse(currentRule.PathTemplate)
 	if err != nil {
-		return nil, fmt.Errorf("Cannot parse Path template: %v", err)
+		return nil, grpc.Errorf(codes.Unknown, "cannot parse Path template: %v", err)
 	}
 
 	urlBuf := &bytes.Buffer{}
 	if err := urlTmpl.Execute(urlBuf, search); err != nil {
-		return nil, errors.New("Cannot execute URL template")
+		return nil, grpc.Errorf(codes.Unknown, "cannot execute URL template")
 	}
 
 	pathBuf := &bytes.Buffer{}
 	if err := pathTmpl.Execute(pathBuf, search); err != nil {
-		return nil, errors.New("Cannot execute Path template")
+		return nil, grpc.Errorf(codes.Unknown, "cannot execute Path template")
 	}
 
 	return &githubin.BinaryDownload{
