@@ -10,7 +10,10 @@ import (
 
 var logger = logrus.New()
 
-var version bool
+var (
+	version bool
+	quiet   bool
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "githubin",
@@ -29,10 +32,16 @@ This is where GithuBin helps: it unifies the way you download binaries`,
 
 		cmd.Help()
 	},
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if quiet {
+			logger.Level = logrus.ErrorLevel
+		}
+	},
 }
 
 func init() {
 	rootCmd.Flags().BoolVarP(&version, "version", "v", false, "Print version information and quit")
+	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "Do not show log output")
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.

@@ -19,10 +19,10 @@ import (
 )
 
 type getOpts struct {
-	binaryOutput string
-	binaryMode   int
-	binaryOs     string
-	binaryArch   string
+	output   string
+	fileMode int
+	os       string
+	arch     string
 }
 
 type getCommand struct {
@@ -32,10 +32,6 @@ type getCommand struct {
 }
 
 func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
-	if len(args) != 2 {
-		return errors.New("Not enough arguments")
-	}
-
 	repo := strings.Split(args[0], "/")
 
 	if len(repo) != 2 {
@@ -46,8 +42,8 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 		Owner:      repo[0],
 		Repository: repo[1],
 		Version:    args[1],
-		Os:         cmd.Flag("os").Value.String(),
-		Arch:       cmd.Flag("arch").Value.String(),
+		Os:         g.opts.os,
+		Arch:       g.opts.arch,
 	}
 
 	logger.WithFields(logrus.Fields{
@@ -58,7 +54,7 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
 	download, err := g.githubin.FindBinary(ctx, search)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatalf("Cannot find binary: %v", err)
 	}
 
 	logger.WithField("format", download.Format).Info("Binary found")
@@ -72,48 +68,53 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 		resp.Body.Close()
 
 		if resp.StatusCode == 404 {
-			log.Fatal("File not found")
+			logger.Fatal("Download failed: file not found")
 		} else {
-			log.Fatal("Download failed")
+			logger.Fatal("Download failed: unknown reason")
 		}
 	}
 	defer resp.Body.Close()
 
+	// TODO: is this a good idea?
+	logrus.RegisterExitHandler(func() {
+		resp.Body.Close()
+	})
+
 	binary, err := g.unpacker.Unpack(resp.Body, download)
 	if err != nil {
-		logger.Panic(err)
+		logger.Fatalf("Unpacking failed: %v", err)
 	}
 
-	if r, ok := binary.(io.ReadCloser); ok {
+	if r, ok := binary.(io.Closer); ok {
 		defer r.Close()
 	}
 
 	// TODO: Create the directory if does not exists
-	if _, err := os.Stat(g.opts.binaryOutput); os.IsNotExist(err) {
+	if _, err := os.Stat(g.opts.output); os.IsNotExist(err) {
 		log.Fatal(err)
 	}
 
 	target := fmt.Sprintf(
 		"%s/%s",
-		g.opts.binaryOutput,
+		g.opts.output,
 		search.Repository,
 	)
 
-	logger.WithField("target", target).Info("Unpacking")
+	logger.WithField("target", target).Info("Saving binary")
 
 	file, err := os.OpenFile(
 		target,
 		os.O_CREATE|os.O_TRUNC|os.O_WRONLY,
-		os.FileMode(g.opts.binaryMode),
+		os.FileMode(g.opts.fileMode),
 	)
 	if err != nil {
-		logger.Panic(err)
+		logger.Fatal(err)
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, binary)
 	if err != nil {
-		logger.Panic(err)
+		logger.Fatal(err)
 	}
 
 	return nil
@@ -131,7 +132,14 @@ func init() {
 	cmd := &cobra.Command{
 		Use:   "get",
 		Short: "Download a binary to a given path (or current directory)",
-		RunE:  getCmd.Run,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) != 2 {
+				return errors.New("Not enough arguments")
+			}
+
+			return nil
+		},
+		RunE: getCmd.Run,
 	}
 
 	rootCmd.AddCommand(cmd)
@@ -141,8 +149,8 @@ func init() {
 		log.Fatal("Could not determine working directory")
 	}
 
-	cmd.Flags().StringVarP(&opts.binaryOutput, "output", "o", cwd, "Output directory")
-	cmd.Flags().IntVarP(&opts.binaryMode, "mode", "m", int(os.ModePerm), "File mode")
-	cmd.Flags().StringVar(&opts.binaryOs, "os", runtime.GOOS, "Target OS (if matters)")
-	cmd.Flags().StringVar(&opts.binaryArch, "arch", runtime.GOARCH, "Target Arch (if matters)")
+	cmd.Flags().StringVarP(&opts.output, "output", "o", cwd, "Output directory")
+	cmd.Flags().IntVarP(&opts.fileMode, "mode", "m", int(os.ModePerm), "File mode")
+	cmd.Flags().StringVar(&opts.os, "os", runtime.GOOS, "Target OS (if matters)")
+	cmd.Flags().StringVar(&opts.arch, "arch", runtime.GOARCH, "Target Arch (if matters)")
 }
