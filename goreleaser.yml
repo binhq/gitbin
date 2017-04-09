@@ -4,7 +4,7 @@ build:
         - linux
     goarch:
         - amd64
-    ldflags: "-s -w -X PACKAGE/cmd.Version=VERSION -X PACKAGE/cmd.CommitHash=COMMIT_HASH -X PACKAGE/cmd.BuildDate=BUILD_DATE"
+    ldflags: "-s -w -X github.com/binhq/githubin/cmd.Version={{.Version}} -X github.com/binhq/githubin/cmd.CommitHash={{.Commit}} -X github.com/binhq/githubin/cmd.BuildDate={{.Date}}"
 
 archive:
     replacements:
