@@ -28,6 +28,7 @@ type getOpts struct {
 type getCommand struct {
 	opts     *getOpts
 	githubin githubin.GithubinClient
+	unpacker format.Unpacker
 }
 
 func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
@@ -61,12 +62,6 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 	}
 
 	logger.WithField("format", download.Format).Info("Binary found")
-
-	unpacker, err := format.FindUnpacker(download.Format)
-	if err != nil {
-		logger.Fatal(err)
-	}
-
 	logger.WithField("url", download.Url).Info("Downloading binary")
 
 	resp, err := http.Get(download.Url)
@@ -84,7 +79,7 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 	}
 	defer resp.Body.Close()
 
-	binary, err := unpacker(resp.Body, download)
+	binary, err := g.unpacker.Unpack(resp.Body, download)
 	if err != nil {
 		logger.Panic(err)
 	}
@@ -130,6 +125,7 @@ func init() {
 	getCmd := &getCommand{
 		opts:     &opts,
 		githubin: &api.Githubin{},
+		unpacker: format.NewAutoUnpacker(),
 	}
 
 	cmd := &cobra.Command{

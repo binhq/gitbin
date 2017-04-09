@@ -7,6 +7,9 @@ import (
 )
 
 // BinaryUnpacker unpacks from plain binary format
-func BinaryUnpacker(r io.Reader, download *githubin.BinaryDownload) (io.Reader, error) {
+type BinaryUnpacker struct{}
+
+// Unpack implements the Unpacker interface
+func (u *BinaryUnpacker) Unpack(r io.Reader, download *githubin.BinaryDownload) (io.Reader, error) {
 	return r, nil
 }

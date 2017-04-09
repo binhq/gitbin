@@ -1,5 +1,5 @@
-hash: ac5e2162464201e780d9e0bb256ff615f20b6a3eea9407ea1c1514e4fd2ce808
-updated: 2017-04-08T22:16:03.325906563+02:00
+hash: 0db8940409a02da758420595dd43fff46bad96134504624965bf6eccd646493d
+updated: 2017-04-09T13:47:00.741952917+02:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
@@ -15,6 +15,8 @@ imports:
   version: 3f0ab6d4ab4bed1c61caf056b63a6e62190c7801
 - name: github.com/Masterminds/sprig
   version: 23597e5f6ad0e4d590e71314bfd0251a4a3cf849
+- name: github.com/sagikazarmark/utilz
+  version: 7426f8ce6040ff4f68b318ede2cda34efd9f4e9d
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/Sirupsen/logrus
@@ -38,6 +40,10 @@ imports:
   - internal/timeseries
   - lex/httplex
   - trace
+- name: golang.org/x/sys
+  version: e24f485414aeafb646f6fca458b0bf869c0880a1
+  subpackages:
+  - unix
 - name: google.golang.org/grpc
   version: 8050b9cbc271307e5a716a9d782803d09b0d6f2d
   subpackages:
