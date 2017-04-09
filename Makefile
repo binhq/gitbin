@@ -4,7 +4,7 @@ PACKAGE = $(shell go list .)
 VERSION ?= $(shell git rev-parse --abbrev-ref HEAD)
 COMMIT_HASH = $(shell git rev-parse --short HEAD 2>/dev/null)
 BUILD_DATE = $(shell date +%FT%T%z)
-LDFLAGS = -ldflags "-X ${PACKAGE}/cmd.Version=${VERSION} -X ${PACKAGE}/cmd.CommitHash=${COMMIT_HASH} -X ${PACKAGE}/cmd.BuildDate=${BUILD_DATE}"
+LDFLAGS = -ldflags "-w -X ${PACKAGE}/cmd.Version=${VERSION} -X ${PACKAGE}/cmd.CommitHash=${COMMIT_HASH} -X ${PACKAGE}/cmd.BuildDate=${BUILD_DATE}"
 BINARY_NAME = $(shell go list . | cut -d '/' -f 3)
 GO_SOURCE_FILES = $(shell find . -type f -name "*.go" -not -name "bindata.go" -not -path "./vendor/*")
 GO_PACKAGES = $(shell go list ./... | grep -v /vendor/)
@@ -27,7 +27,7 @@ watch: ## Watch for file changes and run the built binary
 	reflex -d none -r '\.go$$' -- $(MAKE) ARGS="${ARGS}" run
 
 build: ## Build a binary
-	go build ${LDFLAGS} -o build/${BINARY_NAME}
+	CGO_ENABLED=0 go build ${LDFLAGS} -o build/${BINARY_NAME}
 
 check:: test fmt ## Run tests and linters
 
