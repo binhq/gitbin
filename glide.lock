@@ -1,10 +1,10 @@
 hash: 0db8940409a02da758420595dd43fff46bad96134504624965bf6eccd646493d
-updated: 2017-04-09T13:47:00.741952917+02:00
+updated: 2017-05-01T09:38:32.646633698+02:00
 imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
 - name: github.com/binhq/apis
-  version: 9f1c0723c98bbbbbff5c4f3cc1735d37986eeeaf
+  version: 52f19b5d04936cfcbe089015ff32672e3505ca12
 - name: github.com/golang/protobuf
   version: 69b215d01a5606c843240eab4937eab3acee6530
   subpackages:
@@ -17,6 +17,8 @@ imports:
   version: 23597e5f6ad0e4d590e71314bfd0251a4a3cf849
 - name: github.com/sagikazarmark/utilz
   version: 7426f8ce6040ff4f68b318ede2cda34efd9f4e9d
+  subpackages:
+  - archive/tar
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/Sirupsen/logrus
@@ -45,7 +47,7 @@ imports:
   subpackages:
   - unix
 - name: google.golang.org/grpc
-  version: 8050b9cbc271307e5a716a9d782803d09b0d6f2d
+  version: cdee119ee21e61eef7093a41ba148fa83585e143
   subpackages:
   - codes
   - credentials

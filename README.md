@@ -1,6 +1,6 @@
-# GithuBin
+# GitBin
 
-[![Build Status](https://img.shields.io/travis/binhq/githubin.svg?style=flat-square)](https://travis-ci.org/binhq/githubin)
+[![Build Status](https://img.shields.io/travis/binhq/gitbin.svg?style=flat-square)](https://travis-ci.org/binhq/gitbin)
 
 **Github binary downloader**
 

@@ -7,7 +7,7 @@ import (
 
 	"github.com/Masterminds/semver"
 	"github.com/Masterminds/sprig"
-	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
+	gitbin "github.com/binhq/gitbin/apis/gitbin/v1alpha1"
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -19,12 +19,12 @@ type Githubin struct{}
 // Rule is a template based on which a version of a project can be downloaded and extracted
 type Rule struct {
 	UrlTemplate  string
-	Format       githubin.BinaryDownload_Format
+	Format       gitbin.BinaryDownload_Format
 	PathTemplate string
 }
 
 // FindBinary finds a binary in the local rule list
-func (g *Githubin) FindBinary(ctx context.Context, search *githubin.BinarySearch, opts ...grpc.CallOption) (*githubin.BinaryDownload, error) {
+func (g *Githubin) FindBinary(ctx context.Context, search *gitbin.BinarySearch, opts ...grpc.CallOption) (*gitbin.BinaryDownload, error) {
 	repo := fmt.Sprintf("%s/%s", search.GetOwner(), search.GetRepository())
 
 	rules, ok := repositories[repo]
@@ -95,7 +95,7 @@ func (g *Githubin) FindBinary(ctx context.Context, search *githubin.BinarySearch
 		return nil, grpc.Errorf(codes.Unknown, "cannot execute Path template")
 	}
 
-	return &githubin.BinaryDownload{
+	return &gitbin.BinaryDownload{
 		Url:    urlBuf.String(),
 		Format: currentRule.Format,
 		Path:   pathBuf.String(),

@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/binhq/githubin/api"
-	githubin "github.com/binhq/githubin/apis/githubin/v1alpha1"
-	"github.com/binhq/githubin/format"
+	"github.com/binhq/gitbin/api"
+	gitbin "github.com/binhq/gitbin/apis/gitbin/v1alpha1"
+	"github.com/binhq/gitbin/format"
 	"github.com/spf13/cobra"
 	context "golang.org/x/net/context"
 )
@@ -27,7 +27,7 @@ type getOpts struct {
 
 type getCommand struct {
 	opts     *getOpts
-	githubin githubin.GithubinClient
+	gitbin   gitbin.GitbinClient
 	unpacker format.Unpacker
 }
 
@@ -38,7 +38,7 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("Invalid repository: \"%s\"", args[0])
 	}
 
-	search := &githubin.BinarySearch{
+	search := &gitbin.BinarySearch{
 		Owner:      repo[0],
 		Repository: repo[1],
 		Version:    args[1],
@@ -52,7 +52,7 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 	}).Info("Searching binary")
 
 	ctx := context.Background()
-	download, err := g.githubin.FindBinary(ctx, search)
+	download, err := g.gitbin.FindBinary(ctx, search)
 	if err != nil {
 		logger.Fatalf("Cannot find binary: %v", err)
 	}
@@ -125,7 +125,7 @@ func init() {
 
 	getCmd := &getCommand{
 		opts:     &opts,
-		githubin: &api.Githubin{},
+		gitbin:   &api.Githubin{},
 		unpacker: format.NewAutoUnpacker(),
 	}
 

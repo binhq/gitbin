@@ -16,14 +16,8 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "githubin",
+	Use:   "gitbin",
 	Short: "Easily download binaries from Github",
-	Long: `Github lets you store your binaries on their website
-(more precisely: on S3). This is a cool way of software distribution.
-
-From the consumer point of view it's not that easy though:
-everyone packages software differently.
-This is where GithuBin helps: it unifies the way you download binaries`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
 			fmt.Printf("GithuBin version %s, build %s (at %s)\n", Version, CommitHash, BuildDate)

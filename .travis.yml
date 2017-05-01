@@ -9,8 +9,8 @@ go:
 
 before_install:
     - mkdir -p $HOME/bin
-    - curl -sL http://get.binhq.io/githubin | DEST=$HOME/bin bash
-    - githubin get Masterminds/glide 0.12.3 -o $HOME/bin
+    - curl -sL http://get.binhq.io/gitbin | DEST=$HOME/bin bash
+    - gitbin get Masterminds/glide 0.12.3 -o $HOME/bin
     - make envcheck
 
 install: make setup
@@ -19,6 +19,6 @@ script: make check
 
 after_success: >
     if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then
-        githubin get goreleaser/goreleaser 0.8.9 -o $HOME/bin
+        gitbin get goreleaser/goreleaser 0.15.0 -o $HOME/bin
         goreleaser
     fi
