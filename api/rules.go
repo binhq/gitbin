@@ -13,11 +13,6 @@ var repositories = map[string]map[string]Rule{
 		},
 	},
 	"mattes/migrate": map[string]Rule{
-		"3.0.0-rc2": Rule{
-			UrlTemplate:  "https://github.com/{{.Owner}}/{{.Repository}}/releases/download/v{{.Version}}/migrate.{{.Os}}-{{.Arch}}.tar.gz",
-			Format:       gitbin.BinaryDownload_TARGZ,
-			PathTemplate: "./migrate.{{.Os}}-{{.Arch}}", // TODO: do not require ./ at the beggining of the path???
-		},
 		"*": Rule{
 			UrlTemplate:  "https://github.com/{{.Owner}}/{{.Repository}}/releases/download/v{{.Version}}/migrate.{{.Os}}-{{.Arch}}.tar.gz",
 			Format:       gitbin.BinaryDownload_TARGZ,
