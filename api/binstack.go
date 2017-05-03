@@ -2,12 +2,14 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
+	"strings"
+
+	"fmt"
 
 	"github.com/Masterminds/semver"
 	"github.com/Masterminds/sprig"
-	gitbin "github.com/binhq/gitbin/apis/gitbin/v1alpha1"
+	binstack "github.com/binhq/gitbin/apis/binstack/v1alpha1"
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -18,14 +20,16 @@ type Githubin struct{}
 
 // Rule is a template based on which a version of a project can be downloaded and extracted
 type Rule struct {
+	Homepage     string
+	Description  string
 	UrlTemplate  string
-	Format       gitbin.BinaryDownload_Format
+	Format       binstack.DownloadInfo_Format
 	PathTemplate string
 }
 
 // FindBinary finds a binary in the local rule list
-func (g *Githubin) FindBinary(ctx context.Context, search *gitbin.BinarySearch, opts ...grpc.CallOption) (*gitbin.BinaryDownload, error) {
-	repo := fmt.Sprintf("%s/%s", search.GetOwner(), search.GetRepository())
+func (g *Githubin) FindBinary(ctx context.Context, search *binstack.BinarySearch, opts ...grpc.CallOption) (*binstack.Binary, error) {
+	repo := search.GetName()
 
 	rules, ok := repositories[repo]
 	if !ok {
@@ -33,13 +37,21 @@ func (g *Githubin) FindBinary(ctx context.Context, search *gitbin.BinarySearch, 
 	}
 
 	// TODO: fallback to latest if empty?
-	if search.Version == "" {
+	if search.Version == nil {
 		return nil, grpc.Errorf(codes.InvalidArgument, "empty version")
 	}
 
-	v, err := semver.NewVersion(search.Version)
-	if err != nil {
-		return nil, grpc.Errorf(codes.InvalidArgument, "version cannot be parsed")
+	var v *semver.Version
+	var err error
+
+	// We do not allow constraints for now
+	if search.GetExactVersion() != "" {
+		if v, err = semver.NewVersion(search.GetExactVersion()); err != nil {
+			return nil, grpc.Errorf(codes.InvalidArgument, "version cannot be parsed")
+		}
+	} else {
+		// TODO: Find the latest matching version here
+		return nil, grpc.Errorf(codes.InvalidArgument, "empty version")
 	}
 
 	var currentRule *Rule
@@ -85,19 +97,40 @@ func (g *Githubin) FindBinary(ctx context.Context, search *gitbin.BinarySearch, 
 		return nil, grpc.Errorf(codes.Unknown, "cannot parse Path template: %v", err)
 	}
 
+	args := map[string]string{
+		"Version": v.String(),
+		"Os":      search.GetOs(),
+		"Arch":    search.GetArch(),
+	}
+
 	urlBuf := &bytes.Buffer{}
-	if err := urlTmpl.Execute(urlBuf, search); err != nil {
+	if err := urlTmpl.Execute(urlBuf, args); err != nil {
 		return nil, grpc.Errorf(codes.Unknown, "cannot execute URL template")
 	}
 
 	pathBuf := &bytes.Buffer{}
-	if err := pathTmpl.Execute(pathBuf, search); err != nil {
+	if err := pathTmpl.Execute(pathBuf, args); err != nil {
 		return nil, grpc.Errorf(codes.Unknown, "cannot execute Path template")
 	}
 
-	return &gitbin.BinaryDownload{
-		Url:    urlBuf.String(),
-		Format: currentRule.Format,
-		Path:   pathBuf.String(),
+	homepage := currentRule.Homepage
+	if homepage == "" {
+		homepage = fmt.Sprintf("https://github.com/%s", repo)
+	}
+
+	url := urlBuf.String()
+	if strings.HasPrefix(url, "http") == false {
+		url = fmt.Sprintf("https://github.com/%s/releases/download/%s", repo, url)
+	}
+
+	return &binstack.Binary{
+		Homepage:    homepage,
+		Description: currentRule.Description,
+		Version:     v.String(),
+		DownloadInfo: &binstack.DownloadInfo{
+			Url:    url,
+			Format: binstack.DownloadInfo_Format(currentRule.Format),
+			Path:   pathBuf.String(),
+		},
 	}, nil
 }

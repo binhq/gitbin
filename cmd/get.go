@@ -12,7 +12,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/binhq/gitbin/api"
-	gitbin "github.com/binhq/gitbin/apis/gitbin/v1alpha1"
+	binstack "github.com/binhq/gitbin/apis/binstack/v1alpha1"
 	"github.com/binhq/gitbin/format"
 	"github.com/spf13/cobra"
 	context "golang.org/x/net/context"
@@ -27,23 +27,18 @@ type getOpts struct {
 
 type getCommand struct {
 	opts     *getOpts
-	gitbin   gitbin.GitbinClient
+	binstack binstack.BinstackClient
 	unpacker format.Unpacker
 }
 
 func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
-	repo := strings.Split(args[0], "/")
-
-	if len(repo) != 2 {
-		return fmt.Errorf("Invalid repository: \"%s\"", args[0])
-	}
-
-	search := &gitbin.BinarySearch{
-		Owner:      repo[0],
-		Repository: repo[1],
-		Version:    args[1],
-		Os:         g.opts.os,
-		Arch:       g.opts.arch,
+	search := &binstack.BinarySearch{
+		Name: args[0],
+		Version: &binstack.BinarySearch_ExactVersion{
+			ExactVersion: args[1],
+		},
+		Os:   g.opts.os,
+		Arch: g.opts.arch,
 	}
 
 	logger.WithFields(logrus.Fields{
@@ -52,15 +47,17 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 	}).Info("Searching binary")
 
 	ctx := context.Background()
-	download, err := g.gitbin.FindBinary(ctx, search)
+	binary, err := g.binstack.FindBinary(ctx, search)
 	if err != nil {
 		logger.Fatalf("Cannot find binary: %v", err)
 	}
 
-	logger.WithField("format", download.Format).Info("Binary found")
-	logger.WithField("url", download.Url).Info("Downloading binary")
+	downloadInfo := binary.GetDownloadInfo()
 
-	resp, err := http.Get(download.Url)
+	logger.WithField("format", downloadInfo.GetFormat()).Info("Binary found")
+	logger.WithField("url", downloadInfo.GetUrl()).Info("Downloading binary")
+
+	resp, err := http.Get(downloadInfo.GetUrl())
 	if err != nil {
 		logger.Fatalf("Download failed: %v", err)
 	}
@@ -80,12 +77,12 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 		resp.Body.Close()
 	})
 
-	binary, err := g.unpacker.Unpack(resp.Body, download)
+	b, err := g.unpacker.Unpack(resp.Body, downloadInfo)
 	if err != nil {
 		logger.Fatalf("Unpacking failed: %v", err)
 	}
 
-	if r, ok := binary.(io.Closer); ok {
+	if r, ok := b.(io.Closer); ok {
 		defer r.Close()
 	}
 
@@ -94,10 +91,16 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 		log.Fatal(err)
 	}
 
+	repo := strings.Split(args[0], "/")
+
+	if len(repo) != 2 {
+		return fmt.Errorf("Invalid repository: \"%s\"", args[0])
+	}
+
 	target := fmt.Sprintf(
 		"%s/%s",
 		g.opts.output,
-		search.Repository,
+		repo[1],
 	)
 
 	logger.WithField("target", target).Info("Saving binary")
@@ -112,7 +115,7 @@ func (g *getCommand) Run(cmd *cobra.Command, args []string) error {
 	}
 	defer file.Close()
 
-	_, err = io.Copy(file, binary)
+	_, err = io.Copy(file, b)
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -125,7 +128,7 @@ func init() {
 
 	getCmd := &getCommand{
 		opts:     &opts,
-		gitbin:   &api.Githubin{},
+		binstack: &api.Githubin{},
 		unpacker: format.NewAutoUnpacker(),
 	}
 

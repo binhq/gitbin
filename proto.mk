@@ -4,7 +4,7 @@ PROTO_PATH = vendor/github.com/binhq/apis/binhq
 
 proto: ## Generate code from protocol buffer
 	@mkdir -p apis
-	protoc -I ${PROTO_PATH} ${PROTO_PATH}/gitbin/v1alpha1/gitbin.proto --go_out=plugins=grpc:apis
+	protoc -I ${PROTO_PATH} ${PROTO_PATH}/binstack/v1alpha1/binstack.proto --go_out=plugins=grpc:apis
 
 envcheck::
 	$(call executable_check,protoc,protoc)
