@@ -3,13 +3,13 @@ package format
 import (
 	"io"
 
-	gitbin "github.com/binhq/gitbin/apis/gitbin/v1alpha1"
+	binstack "github.com/binhq/gitbin/apis/binstack/v1alpha1"
 )
 
 // BinaryUnpacker unpacks from plain binary format
 type BinaryUnpacker struct{}
 
 // Unpack implements the Unpacker interface
-func (u *BinaryUnpacker) Unpack(r io.Reader, download *gitbin.BinaryDownload) (io.Reader, error) {
+func (u *BinaryUnpacker) Unpack(r io.Reader, downloadInfo *binstack.DownloadInfo) (io.Reader, error) {
 	return r, nil
 }

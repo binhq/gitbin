@@ -4,7 +4,7 @@ imports:
 - name: github.com/aokoli/goutils
   version: 9c37978a95bd5c709a15883b6242714ea6709e64
 - name: github.com/binhq/apis
-  version: 52f19b5d04936cfcbe089015ff32672e3505ca12
+  version: ce59b868da688a3c307d066d7734954c82973f73
 - name: github.com/golang/protobuf
   version: 69b215d01a5606c843240eab4937eab3acee6530
   subpackages:
