@@ -10,7 +10,7 @@ go:
 before_install:
     - mkdir -p $HOME/bin
     - curl -sL http://get.binhq.io/gitbin | DEST=$HOME/bin bash
-    - gitbin get Masterminds/glide 0.12.3 -o $HOME/bin
+    - gitbin get golang/dep 0.3.0 -o $HOME/bin
     - make envcheck
 
 install: make setup

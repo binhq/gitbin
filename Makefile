@@ -17,7 +17,7 @@ GO_PACKAGES = $(shell go list ./... | grep -v /vendor/)
 setup:: dep ## Setup the project for development
 
 dep: ## Install dependencies
-	@glide install
+	@dep ensure
 
 clean:: ## Clean the working area
 	rm -rf ${BUILD_DIR}/ vendor/
