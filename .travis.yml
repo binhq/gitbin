@@ -19,6 +19,6 @@ script: make check
 
 after_success: >
     if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then
-        gitbin get goreleaser/goreleaser 0.15.0 -o $HOME/bin
+        gitbin get goreleaser/goreleaser 0.28.3 -o $HOME/bin
         goreleaser
     fi

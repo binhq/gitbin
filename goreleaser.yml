@@ -1,9 +1,12 @@
-build:
+builds:
+  -
+    env:
+      - CGO_ENABLED=0
     goos:
-        - darwin
-        - linux
+      - linux
+      - darwin
     goarch:
-        - amd64
+      - amd64
     ldflags: "-s -w -X github.com/binhq/gitbin/cmd.Version={{.Version}} -X github.com/binhq/gitbin/cmd.CommitHash={{.Commit}} -X github.com/binhq/gitbin/cmd.BuildDate={{.Date}}"
 
 archive:
