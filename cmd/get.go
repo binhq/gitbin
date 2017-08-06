@@ -10,10 +10,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/binhq/gitbin/api"
 	binstack "github.com/binhq/gitbin/apis/binstack/v1alpha1"
 	"github.com/binhq/gitbin/format"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	context "golang.org/x/net/context"
 )
