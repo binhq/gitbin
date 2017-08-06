@@ -1,20 +1,28 @@
-hash: 0db8940409a02da758420595dd43fff46bad96134504624965bf6eccd646493d
-updated: 2017-05-01T09:38:32.646633698+02:00
+hash: bcd70ce99f0ba6f6bc1a39c5f3a5cca57622d22037c652072d105b00a36e06d4
+updated: 2017-08-06T22:59:23.277196593+02:00
 imports:
 - name: github.com/aokoli/goutils
-  version: 9c37978a95bd5c709a15883b6242714ea6709e64
+  version: 3391d3790d23d03408670993e957e8f408993c34
 - name: github.com/binhq/apis
   version: ce59b868da688a3c307d066d7734954c82973f73
 - name: github.com/golang/protobuf
-  version: 69b215d01a5606c843240eab4937eab3acee6530
+  version: 2bba0603135d7d7f5cb73b2125beeda19c09f4ef
   subpackages:
   - proto
+- name: github.com/goph/stdlib
+  version: ebad8d8b5b9843c6104e35acfee6f7b2d73503b2
+  subpackages:
+  - archive/zip
+- name: github.com/huandu/xstrings
+  version: 3959339b333561bf62a38b424fd41517c2c90f40
+- name: github.com/imdario/mergo
+  version: 3e95a51e0639b4cf372f2ccf74c86749d747fbdc
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/Masterminds/semver
-  version: 3f0ab6d4ab4bed1c61caf056b63a6e62190c7801
+  version: 517734cc7d6470c0d07130e40fd40bdeb9bcd3fd
 - name: github.com/Masterminds/sprig
-  version: 23597e5f6ad0e4d590e71314bfd0251a4a3cf849
+  version: 9526be0327b26ad31aa70296a7b10704883976d5
 - name: github.com/sagikazarmark/utilz
   version: 7426f8ce6040ff4f68b318ede2cda34efd9f4e9d
   subpackages:
@@ -24,30 +32,29 @@ imports:
 - name: github.com/Sirupsen/logrus
   version: ba1b36c82c5e05c4f912a88eab0dcd91a171688f
 - name: github.com/spf13/cobra
-  version: 16c014f1a19d865b765b420e74508f80eb831ada
+  version: b26b538f693051ac6518e65672de3144ce3fbedc
 - name: github.com/spf13/pflag
-  version: 25f8b5b07aece3207895bf19f7ab517eb3b22a40
+  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: golang.org/x/crypto
-  version: b8a2a83acfe6e6770b75de42d5ff4c67596675c0
+  version: 42ff06aea7c329876e5a0fe94acc96902accf0ad
   subpackages:
   - pbkdf2
   - scrypt
 - name: golang.org/x/net
-  version: 61557ac0112b576429a0df080e1c2cef5dfbb642
+  version: e90d6d0afc4c315a0d87a568ae68577cc15149a0
   subpackages:
   - context
   - http2
   - http2/hpack
-  - idna
   - internal/timeseries
   - lex/httplex
   - trace
 - name: golang.org/x/sys
-  version: e24f485414aeafb646f6fca458b0bf869c0880a1
+  version: d8f5ea21b9295e315e612b4bcf4bedea93454d4d
   subpackages:
   - unix
 - name: google.golang.org/grpc
-  version: cdee119ee21e61eef7093a41ba148fa83585e143
+  version: 8050b9cbc271307e5a716a9d782803d09b0d6f2d
   subpackages:
   - codes
   - credentials

@@ -27,7 +27,7 @@ watch: ## Watch for file changes and run the built binary
 	reflex -d none -r '\.go$$' -- $(MAKE) ARGS="${ARGS}" run
 
 build: ## Build a binary
-	CGO_ENABLED=0 go build ${LDFLAGS} -o build/${BINARY_NAME}
+	CGO_ENABLED=0 go build -tags '${TAGS}' ${LDFLAGS} -o build/${BINARY_NAME}
 
 check:: test fmt ## Run tests and linters
 

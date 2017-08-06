@@ -24,6 +24,7 @@ func NewAutoUnpacker() Unpacker {
 		unpackers: map[binstack.DownloadInfo_Format]Unpacker{
 			binstack.DownloadInfo_BINARY: &BinaryUnpacker{},
 			binstack.DownloadInfo_TARGZ:  &TargzUnpacker{},
+			binstack.DownloadInfo_ZIP:    &ZipUnpacker{},
 		},
 	}
 }
