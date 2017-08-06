@@ -4,7 +4,7 @@ import (
 	"io"
 
 	binstack "github.com/binhq/gitbin/apis/binstack/v1alpha1"
-	"github.com/sagikazarmark/utilz/archive/tar"
+	"github.com/goph/stdlib/archive/tar"
 )
 
 // TargzUnpacker unpacks from a tar.gz archive

@@ -1,5 +1,5 @@
-hash: 7b3a08a3dc76d8c14883ec2c66b8e75a1b307548ad01bd6bce5f7fb83a28f3e0
-updated: 2017-08-06T23:34:18.222540726+02:00
+hash: 99b92afff6df641373e86563036859014ff460d27a9bb1505d5e00192c11da1c
+updated: 2017-08-06T23:36:53.929106579+02:00
 imports:
 - name: github.com/aokoli/goutils
   version: 3391d3790d23d03408670993e957e8f408993c34
@@ -16,6 +16,7 @@ imports:
 - name: github.com/goph/stdlib
   version: ebad8d8b5b9843c6104e35acfee6f7b2d73503b2
   subpackages:
+  - archive/tar
   - archive/zip
 - name: github.com/huandu/xstrings
   version: 3959339b333561bf62a38b424fd41517c2c90f40
@@ -27,10 +28,6 @@ imports:
   version: 517734cc7d6470c0d07130e40fd40bdeb9bcd3fd
 - name: github.com/Masterminds/sprig
   version: 9526be0327b26ad31aa70296a7b10704883976d5
-- name: github.com/sagikazarmark/utilz
-  version: 7426f8ce6040ff4f68b318ede2cda34efd9f4e9d
-  subpackages:
-  - archive/tar
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/sirupsen/logrus
