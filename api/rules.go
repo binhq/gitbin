@@ -29,4 +29,13 @@ var repositories = map[string]map[string]Rule{
 			PathTemplate: "goreleaser",
 		},
 	},
+	"golang/dep": map[string]Rule{
+		"*": Rule{
+			Homepage:     "https://github.com/golang/dep",
+			Description:  "Go dependency management tool",
+			UrlTemplate:  "v{{.Version}}/dep-{{.Os}}-{{.Arch}}.zip",
+			Format:       3, // binstack.DownloadInfo_ZIP
+			PathTemplate: "dep",
+		},
+	},
 }
