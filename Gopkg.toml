@@ -1,0 +1,30 @@
+[[constraint]]
+  name = "github.com/Masterminds/semver"
+  version = "1.2.2"
+
+[[constraint]]
+  name = "github.com/Masterminds/sprig"
+  version = "2.10.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/golang/protobuf"
+
+[[constraint]]
+  name = "github.com/goph/stdlib"
+  version = "0.8.0"
+
+[[constraint]]
+  name = "github.com/sirupsen/logrus"
+  version = "1.0.0"
+
+[[constraint]]
+  name = "github.com/spf13/cobra"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/net"
+
+[[constraint]]
+  branch = "master"
+  name = "google.golang.org/grpc"
