@@ -34,8 +34,8 @@ build: ## Build a binary
 
 check:: test cs ## Run tests and linters
 
-test: .env.test ## Run unit tests
-	@go test ${ARGS} ${GO_PACKAGES}
+test: ## Run unit tests
+	@go test -tags '${TAGS}' ${ARGS} ${GO_PACKAGES}
 
 watch-test: ## Watch for file changes and run tests
 	reflex -t 2s -d none -r '\.go$$' -- $(MAKE) ARGS="${ARGS}" test
