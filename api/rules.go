@@ -30,7 +30,13 @@ var repositories = map[string]map[string]Rule{
 		},
 	},
 	"golang/dep": map[string]Rule{
-		"*": Rule{
+		">0.3.0": Rule{
+			Homepage:    "https://github.com/golang/dep",
+			Description: "Go dependency management tool",
+			UrlTemplate: "v{{.Version}}/dep-{{.Os}}-{{.Arch}}",
+			Format:      1, // binstack.DownloadInfo_BINARY
+		},
+		"<=0.3.0": Rule{
 			Homepage:     "https://github.com/golang/dep",
 			Description:  "Go dependency management tool",
 			UrlTemplate:  "v{{.Version}}/dep-{{.Os}}-{{.Arch}}.zip",
