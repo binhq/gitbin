@@ -1,6 +1,7 @@
-language: go
+dist: trusty
+sudo: required
 
-sudo: false
+language: go
 
 go:
     - 1.7.x
@@ -20,5 +21,9 @@ script: make check
 after_success: >
     if [[ "$TRAVIS_TAG" && $TRAVIS_GO_VERSION =~ ^1\.8(\.[0-9]+)?$ ]]; then
         gitbin get goreleaser/goreleaser 0.28.3 -o $HOME/bin
+        sudo apt-get update
+        sudo apt-get install --yes snapd
+        export PATH=/snap/bin:$PATH
+        sudo snap install snapcraft --candidate --classic
         goreleaser
     fi
